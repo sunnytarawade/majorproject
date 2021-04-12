@@ -1,4 +1,6 @@
 node_modules
 stripebackend/node_modules
+stripebackend/.env
+stripefrontend/.env
 stripefrontend/node_modules
 dtr/node_modules
