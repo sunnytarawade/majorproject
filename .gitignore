@@ -1,0 +1,4 @@
+node_modules
+stripebackend/node_modules
+stripefrontend/node_modules
+dtr/node_modules
