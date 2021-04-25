@@ -4,8 +4,10 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const morgan = require('morgan')
 const uuid = require('uuid')
+require('dotenv').config();
 
-mongoose.connect("mongodb+srv://admin:admin@cluster0.rbxbg.mongodb.net/onetimednsDB?retryWrites=true&w=majority",
+const {MONGO_CONNECT} = process.env;
+mongoose.connect(MONGO_CONNECT,
   
      { 
       useNewUrlParser: true, 
