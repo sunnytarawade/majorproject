@@ -19,7 +19,7 @@ mongoose.connect("mongodb+srv://admin:admin@cluster0.rbxbg.mongodb.net/onetimedn
 
 const authRouter = require('./api/routes/auth')
 const productRouter = require('./api/routes/products')
-const dnsProfileVerificationRouter = require('./api/routes/dnsProfileVerificationRouter')
+const dnsServer = require('./api/routes/dnsServer')
 
 
 app.use(express.json())
@@ -33,7 +33,7 @@ app.get("/",(req,res)=>{
 
 app.use('/auth',authRouter)
 app.use('/products',productRouter)
-app.use('/dns-verify',dnsProfileVerificationRouter)
+app.use('/dns-verify',dnsServer)
 
 app.use((req,res,next)=>{
     const error = new Error('Not Found')
