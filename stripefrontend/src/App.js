@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 
-import StripeComponent from './components/StripeComponent';
+// import StripeComponent from './components/StripeComponent';
 import Cart from './components/Cart'
 import DNSVerify from './components/DNSVerify'
 import Login from './components/Login';
