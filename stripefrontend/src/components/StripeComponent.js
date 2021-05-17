@@ -16,7 +16,7 @@ function StripeComponent() {
       'Content-Type' :'application/json'
     }
 
-    return fetch('http://localhost:3001/dns-verfiy',{
+    return fetch('http://localhost:3001/payment',{
       method :'POST',
       headers,
       body : JSON.stringify(body)
@@ -33,7 +33,7 @@ function StripeComponent() {
 
   const [product, setProduct] = useState({
       name : "Apple",
-      price : 10,
+      price : 51,
       seller : "Me"
 
   })
@@ -58,7 +58,7 @@ function StripeComponent() {
           // shippingAddress
           // billingAddress
         >
-          <button className="btn-large blue lighten-1">Buy apples @ Rs. {product.price}</button>
+          <button className="btn-large blue lighten-1">Buy apples @ Rs. 0.{product.price}</button>
         </StripeCheckout>
 
       </header>

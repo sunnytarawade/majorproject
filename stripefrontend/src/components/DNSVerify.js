@@ -3,6 +3,7 @@ import React,{ useEffect } from "react"
 import { Component } from "react"
 import {v4 as uuid} from 'uuid'
 import publicIp from 'public-ip';
+import StripeComponent from './StripeComponent';
 class DNSVerify extends Component{
     state={
         shouldShowCheckoutPage : false,
@@ -35,6 +36,32 @@ class DNSVerify extends Component{
         return dnsResponse.dnsInfo.dnsPublicIpAddress || '';
     }
 
+    checkIpAndPreviousDNSGeolocationIntegrity = (dnsIpHistoryArray)=>{
+        const maxDifference = 4;
+        const uniqueGeolocationIps = []; 
+        const dnsIpHistoryArrayLength = dnsIpHistoryArray?.length ?? 0;
+        console.log(dnsIpHistoryArray);
+        if(dnsIpHistoryArrayLength > 0){
+        for(let i =0;i<dnsIpHistoryArrayLength;i++){
+            if(uniqueGeolocationIps.length >= maxDifference)
+            return false; 
+            else{
+            if(!uniqueGeolocationIps.includes(dnsIpHistoryArray[i].dnsIp))
+                uniqueGeolocationIps.push(dnsIpHistoryArray[i].dnsIp)
+             }
+        }}
+        return true;
+        // const res = dnsIpHistoryArray.map((dnsIpObj) => {
+        //     if(uniqueGeolocationIps.length >= maxDifference)
+        //         return false; 
+        //     else{
+        //         if(uniqueGeolocationIps.includes(dnsIpObj.dnsIp))
+        //             uniqueGeolocationIps.push(dnsIpObj.dnsIp)
+        //     }           
+        // })
+        
+        // return res;
+    }
 
     checkIfClientAndDnsIpAreSimilar = (clientPublicIpAddress,dnsPublicIpAddress)=>{
         const clientIpSubaddress = clientPublicIpAddress.substring(0,12);
@@ -47,16 +74,60 @@ class DNSVerify extends Component{
         const clientPublicIpAddress = await this.getIp();
         const dnsPublicIpAddress = await this.getDnsIp();
 
-        console.log(clientPublicIpAddress);
-        console.log(dnsPublicIpAddress);
+        const dnsIpHistoryApi = `http://localhost:3001/dns-ip-history/${clientPublicIpAddress}`;
+        const {clientDnsIpHistory} = await fetch(dnsIpHistoryApi,{
+            method:'GET',
+            headers:{
+                   'Content-Type':'application/json',
+                'Access-Control-Allow-Origin' : '*',
+         },
+        }).then(async res=>await res.json());
+ 
+
+        console.log(clientDnsIpHistory);
+
+        const prevDnsIpHistoryArray = clientDnsIpHistory?.[0]?.dnsIpHistoryArray;
+        const dnsIpHistoryArray = prevDnsIpHistoryArray ? [...prevDnsIpHistoryArray,{dnsIp:dnsPublicIpAddress}] : [{dnsIp:dnsPublicIpAddress}];
+
+        if(clientDnsIpHistory?.length === 0){
+            const res = await fetch('http://localhost:3001/dns-ip-history',{
+                method:'POST',
+                headers:{
+                       'Content-Type':'application/json',
+                    'Access-Control-Allow-Origin' : '*',
+             },
+                body : JSON.stringify({
+                    clientIp:clientPublicIpAddress,
+                    dnsIp : dnsPublicIpAddress
+                })
+            }).then(async res=>await res.json());
+            console.log(res);
+     
+        }else{
+            const res = await fetch(dnsIpHistoryApi,{
+                method:'PATCH',
+                headers:{
+                       'Content-Type':'application/json',
+                    'Access-Control-Allow-Origin' : '*',
+             },
+                body : JSON.stringify({
+                    dnsIp : dnsPublicIpAddress,
+                    dnsIpHistoryArray
+                })
+            }).then(async res=>await res.json());
+            console.log(res);
+     
+        }
 
         if(clientPublicIpAddress && dnsPublicIpAddress){
                     // checks 2 cases :
         // 1. clientIP === dnsIP
         // 2. clientIP is in the same DNS subfarm 
-
-            const isClientAndDnsIpSimilar = this.checkIfClientAndDnsIpAreSimilar(clientPublicIpAddress,dnsPublicIpAddress);
-            console.log(isClientAndDnsIpSimilar)
+        
+           const  isClientDnsIpCombinationValid = this.checkIfClientAndDnsIpAreSimilar(clientPublicIpAddress,dnsPublicIpAddress) && this.checkIpAndPreviousDNSGeolocationIntegrity(dnsIpHistoryArray)
+        
+        //    this.setState({shouldShowCheckoutPage:isClientDnsIpCombinationValid})
+           this.setState({shouldShowCheckoutPage:true})
         }
         
     }
@@ -66,7 +137,7 @@ class DNSVerify extends Component{
     }
 
     render(){
-        return <>{this.state.publicIpAddress}</>
+        return <>{this.state.shouldShowCheckoutPage ? <StripeComponent/>:null}</>
     }
 }
 

@@ -68,34 +68,35 @@ router.post('/',(req,res,next)=>{
 })
 
 router.patch('/:clientIp', async (req,res)=>{
-    const {dnsIp} = req.body;
+    const {dnsIp,dnsIpHistoryArray} = req.body;
     const {clientIp} = req.params;
 
-    const result = await DnsIpHistory.find({clientIp : clientIp}).exec();
-    const dnsIpHistoryArray = result?.[0]?.dnsIpHistoryArray;
-    // const dnsIpStringHistoryArray = dnsIpHistoryArray?.map(dnsIpObject=>dnsIpObject.dnsIp);
-    console.log(dnsIpHistoryArray);
+    // const result = await DnsIpHistory.find({clientIp : clientIp}).exec();
+    // const dnsIpHistoryArray = result?.[0]?.dnsIpHistoryArray;
+    // // const dnsIpStringHistoryArray = dnsIpHistoryArray?.map(dnsIpObject=>dnsIpObject.dnsIp);
+    // console.log(dnsIpHistoryArray);
     
-    if(!dnsIpHistoryArray){
-        const dnsIpHistory = new DnsIpHistory({
-            // _id : new mongoose.Types.ObjectId,
-            // _id : req.body._id,
-            clientIp : clientIp,
-            dnsIpHistoryArray:[{dnsIp:dnsIp}],
-            })
-        dnsIpHistory.save()
-        .then(result=>{console.log(req.body)
-            res.status(200).json({
-                clientIp : clientIp,
-                dnsIpHistoryArray:[{dnsIp:dnsIp}],
-              })})
-            .catch(err => {
-                console.log(err)
-                res.status(500).json({
-                error : err
-            })})
-    }else if(dnsIpHistoryArray.length > 0){
-        DnsIpHistory.updateOne({clientIp:clientIp},{dnsIpHistoryArray : [{dnsIp:dnsIp},...dnsIpHistoryArray]}).exec().then(result => {
+    // if(!dnsIpHistoryArray){
+    //     const dnsIpHistory = new DnsIpHistory({
+    //         // _id : new mongoose.Types.ObjectId,
+    //         // _id : req.body._id,
+    //         clientIp : clientIp,
+    //         dnsIpHistoryArray:[{dnsIp:dnsIp}],
+    //         })
+    //     dnsIpHistory.save()
+    //     .then(result=>{console.log(req.body)
+    //         res.status(200).json({
+    //             clientIp : clientIp,
+    //             dnsIpHistoryArray:[{dnsIp:dnsIp}],
+    //           })})
+    //         .catch(err => {
+    //             console.log(err)
+    //             res.status(500).json({
+    //             error : err
+    //         })})
+    // }else if(dnsIpHistoryArray.length > 0){
+        // DnsIpHistory.updateOne({clientIp:clientIp},{dnsIpHistoryArray : [{dnsIp:dnsIp},...dnsIpHistoryArray]}).exec().then(result => {
+        DnsIpHistory.updateOne({clientIp:clientIp},{dnsIpHistoryArray : dnsIpHistoryArray}).exec().then(result => {
             res.status(200).json({
                 updatedProduct : result
             })
@@ -105,7 +106,7 @@ router.patch('/:clientIp', async (req,res)=>{
                 error : err
             })
         })
-    }
+    // }
 
     
 })
