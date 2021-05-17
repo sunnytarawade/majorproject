@@ -18,7 +18,7 @@ function App() {
         <Route path="/login" component={Login}></Route>
         <Route path="/purchase" component={DNSVerify}></Route>
         <Route path="/cart" component={Cart}></Route>
-        {/* <Route path="/dns-verify" component={DNSVerify}></Route> */}
+        <Route path="/dns-verify" component={DNSVerify}></Route>
         </Switch>
         </BrowserRouter>
       </div>

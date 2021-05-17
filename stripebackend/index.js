@@ -21,6 +21,7 @@ mongoose.connect(MONGO_CONNECT,
 
 const authRouter = require('./api/routes/auth')
 const productRouter = require('./api/routes/products')
+const dnsIpHistoryRouter = require('./api/routes/dnsIpHistory')
 const dnsServer = require('./api/routes/dnsServer')
 
 
@@ -36,7 +37,7 @@ app.get("/",(req,res)=>{
 app.use('/auth',authRouter)
 app.use('/products',productRouter)
 app.use('/dns-verify',dnsServer)
-
+app.use ('/dns-ip-history',dnsIpHistoryRouter)
 app.use((req,res,next)=>{
     const error = new Error('Not Found')
     error.status = 404
