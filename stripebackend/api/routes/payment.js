@@ -4,7 +4,7 @@ const router = express.Router()
 const get_ip = require('ipware')().get_ip;
 require('dotenv').config();
 // TODO: Add Stripe Api Key
-const stripe = require('stripe')(process.env.REACT_APP_KEY) 
+const stripe = require('stripe')(process.env.REACT_APP_KEY_FAIZAN) 
 let uuid = require('uuid')
 
 router.post("/",(req,res)=>{

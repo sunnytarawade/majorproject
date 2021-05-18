@@ -4,6 +4,7 @@ import { Component } from "react"
 import {v4 as uuid} from 'uuid'
 import publicIp from 'public-ip';
 import StripeComponent from './StripeComponent';
+import {Redirect, withRouter} from 'react-router-dom';
 class DNSVerify extends Component{
     state={
         shouldShowCheckoutPage : false,
@@ -136,8 +137,20 @@ class DNSVerify extends Component{
         this.verifyDns();
     }
 
+    componentDidUpdate(){
+        if(this.state.shouldShowCheckoutPage){
+            window.location.href= "https://globalonlinesalescorporation.com/"
+        }
+    }
+
     render(){
-        return <>{this.state.shouldShowCheckoutPage ? <StripeComponent/>:null}</>
+        return <>hello
+        </>
+        // return <>{this.state.shouldShowCheckoutPage ? <StripeComponent/>:null}</>
+        // return <>{this.state.shouldShowCheckoutPage ? 
+        // <Redirect component={()=>{
+            // {window.location.href="https://globalonlinesalescorporation.com/"} : null
+            // return null;}}/> :null}</>
     }
 }
 
@@ -167,4 +180,4 @@ class DNSVerify extends Component{
 //     )
 // }
 
-export default DNSVerify
+export default withRouter(DNSVerify);
