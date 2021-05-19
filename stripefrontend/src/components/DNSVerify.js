@@ -8,6 +8,7 @@ import {Redirect, withRouter} from 'react-router-dom';
 class DNSVerify extends Component{
     state={
         shouldShowCheckoutPage : false,
+        update:0
     }
     
     constructor(props){
@@ -16,7 +17,7 @@ class DNSVerify extends Component{
 
     getIp = async ()=>{
         const publicIpAddress =await  publicIp.v4();
-        console.log(publicIpAddress)
+        console.log(`clientPublicIPAddress : ${publicIpAddress}`);
         // this.setState({publicIpAddress})
         return publicIpAddress || '';
     }
@@ -33,7 +34,7 @@ class DNSVerify extends Component{
         // }
         );
         const dnsResponse = await res.json();
-        console.log(dnsResponse)
+        console.log(`dnsPublicIPAddress ${dnsResponse.dnsInfo.dnsPublicIpAddress}`)
         return dnsResponse.dnsInfo.dnsPublicIpAddress || '';
     }
 
@@ -41,6 +42,7 @@ class DNSVerify extends Component{
         const maxDifference = 4;
         const uniqueGeolocationIps = []; 
         const dnsIpHistoryArrayLength = dnsIpHistoryArray?.length ?? 0;
+        console.log('dnsIpHistoryArray : \n')
         console.log(dnsIpHistoryArray);
         if(dnsIpHistoryArrayLength > 0){
         for(let i =0;i<dnsIpHistoryArrayLength;i++){
@@ -85,7 +87,7 @@ class DNSVerify extends Component{
         }).then(async res=>await res.json());
  
 
-        console.log(clientDnsIpHistory);
+        // console.log(clientDnsIpHistory);
 
         const prevDnsIpHistoryArray = clientDnsIpHistory?.[0]?.dnsIpHistoryArray;
         const dnsIpHistoryArray = prevDnsIpHistoryArray ? [...prevDnsIpHistoryArray,{dnsIp:dnsPublicIpAddress}] : [{dnsIp:dnsPublicIpAddress}];
@@ -102,7 +104,7 @@ class DNSVerify extends Component{
                     dnsIp : dnsPublicIpAddress
                 })
             }).then(async res=>await res.json());
-            console.log(res);
+            // console.log(res);
      
         }else{
             const res = await fetch(dnsIpHistoryApi,{
@@ -116,7 +118,7 @@ class DNSVerify extends Component{
                     dnsIpHistoryArray
                 })
             }).then(async res=>await res.json());
-            console.log(res);
+            // console.log(res);
      
         }
 
@@ -125,16 +127,28 @@ class DNSVerify extends Component{
         // 1. clientIP === dnsIP
         // 2. clientIP is in the same DNS subfarm 
         
-           const  isClientDnsIpCombinationValid = this.checkIfClientAndDnsIpAreSimilar(clientPublicIpAddress,dnsPublicIpAddress) && this.checkIpAndPreviousDNSGeolocationIntegrity(dnsIpHistoryArray)
+           const  isClientDnsIpCombinationValid = !this.checkIfClientAndDnsIpAreSimilar(clientPublicIpAddress,dnsPublicIpAddress) && this.checkIpAndPreviousDNSGeolocationIntegrity(dnsIpHistoryArray)
         
         //    this.setState({shouldShowCheckoutPage:isClientDnsIpCombinationValid})
-           this.setState({shouldShowCheckoutPage:true})
+        if(isClientDnsIpCombinationValid){   
+        this.setState({shouldShowCheckoutPage:true,update:2})
+        console.log("")
+    }
+        else{
+            this.setState({shouldShowCheckoutPage:false,update:1})
+        
+        }
         }
         
     }
 
     componentDidMount(){
+        try{
         this.verifyDns();
+        }
+        catch(err){
+            this.setState({update:1})
+        }
     }
 
     componentDidUpdate(){
@@ -143,9 +157,19 @@ class DNSVerify extends Component{
         }
     }
 
+    displayMessage(){
+        switch(this.state.update){
+            case 0 : return "PLEASE WAIT..."
+            case 1:  return "SORRY, WE DETECTED SUSPICIOUS BEHAVIOUR, PLEASE TRY AGAIN"
+        }
+    }
+
     render(){
-        return <>hello
-        </>
+        return <div style={{display:'flex',height:'100vh',justifyContent: 'space-evenly', fontWeight:'bold',fontSize:'24px'}}>
+            <div style={{alignSelf:'center'}}>
+            {this.displayMessage()}
+            </div>
+        </div>
         // return <>{this.state.shouldShowCheckoutPage ? <StripeComponent/>:null}</>
         // return <>{this.state.shouldShowCheckoutPage ? 
         // <Redirect component={()=>{
