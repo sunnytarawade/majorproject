@@ -10,7 +10,7 @@ const getConfig = () => ({
 
 const postRequest = async (domainName)=>{
 
-    const dnsUrl = `http://localhost:3001/dns-verify/${domainName}`
+    const dnsUrl = `http://localhost:3005/dns-verify/${domainName}`
     const res = await fetch(dnsUrl,getConfig())
     const dnsResponse = await res.json();
     console.log(dnsResponse);

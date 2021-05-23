@@ -13,8 +13,8 @@ const dnsTable =  async (domainName)=>{
     console.log(domainName)
 
     let dnsPublicIpAddress = '';
-    // dnsPublicIpAddress = await getDnsPublicIp();
-    dnsPublicIpAddress = '440.230.54.12';
+    dnsPublicIpAddress = await getDnsPublicIp();
+    // dnsPublicIpAddress = '440.230.54.12';
     switch(domainName){
         case 'google.com':
             return {

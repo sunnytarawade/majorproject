@@ -6,7 +6,7 @@ export const logUserIn = (userCredentials)=>{
     
     console.log('1) Login Action creator works before POST')
     //post request
-    const res = await axios.post("http://localhost:3001/login",userCredentials)/* .then((res)=>{res.json()}) .then(res=>{console.log('2) Post request success' + res.data)})*/
+    const res = await axios.post("http://localhost:3005/login",userCredentials)/* .then((res)=>{res.json()}) .then(res=>{console.log('2) Post request success' + res.data)})*/
     
     console.log(res)
 

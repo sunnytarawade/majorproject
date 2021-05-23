@@ -64,7 +64,7 @@ app.post('/purchase',async (req,res,next)=>{
 
     next()
 
-    const url = 'http://localhost:3001'
+    const url = 'http://localhost:3005'
     const idempotencyKey = uuid.v4()
 
     const hashedKey = await bcrypt.hash(idempotencyKey,10)
@@ -86,4 +86,4 @@ app.post('/purchase',async (req,res,next)=>{
 })
 
 
-app.listen(3001,()=>{console.log("Listening at localhost:3001")})
+app.listen(3005,()=>{console.log("Listening at localhost:3005")})

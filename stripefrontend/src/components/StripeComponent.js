@@ -16,7 +16,7 @@ function StripeComponent() {
       'Content-Type' :'application/json'
     }
 
-    return fetch('http://localhost:3001/payment',{
+    return fetch('http://localhost:3005/payment',{
       method :'POST',
       headers,
       body : JSON.stringify(body)
@@ -53,8 +53,8 @@ function StripeComponent() {
         </a>
 
         <StripeCheckout
-          // stripeKey="pk_test_51HTNZZCiV3aOZa5CUau4xQh7YkWhgqPFhqzJgn0v6c8bJLbfTCmBMPB4JYXr3nBVZub1hvGqH4VLWYymhrZq88jn00xM2c2ftB" token={makePayment} name="Buy Apples" amount={product.price}
-          stripeKey="pk_live_51HnrTPDE7QlaQMxsV24PLhDO1WIfWvuLi8q5FGpNP6wd6pyo08Gba7fBp7hb4C785BMXjMRz0388I3lV0rRwGi0K00xcpizlB3" token={makePayment} name="Buy Apples" amount={product.price}
+        //enter your test public stripekey in stripeKey
+          stripeKey="" token={makePayment} name="Buy Apples" amount={product.price}
         
           // shippingAddress
           // billingAddress

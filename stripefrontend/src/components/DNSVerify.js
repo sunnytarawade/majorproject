@@ -23,7 +23,7 @@ class DNSVerify extends Component{
     }
 
     getDnsIp = async ()=>{
-        const dnsApi = `http://localhost:3001/dns-verify/csdzv.onetimedns.com`
+        const dnsApi = `http://localhost:3005/dns-verify/csdzv.onetimedns.com`
         const res = await fetch(dnsApi
         //     ,{
         //     method:'GET',
@@ -77,7 +77,7 @@ class DNSVerify extends Component{
         const clientPublicIpAddress = await this.getIp();
         const dnsPublicIpAddress = await this.getDnsIp();
 
-        const dnsIpHistoryApi = `http://localhost:3001/dns-ip-history/${clientPublicIpAddress}`;
+        const dnsIpHistoryApi = `http://localhost:3005/dns-ip-history/${clientPublicIpAddress}`;
         const {clientDnsIpHistory} = await fetch(dnsIpHistoryApi,{
             method:'GET',
             headers:{
@@ -93,7 +93,7 @@ class DNSVerify extends Component{
         const dnsIpHistoryArray = prevDnsIpHistoryArray ? [...prevDnsIpHistoryArray,{dnsIp:dnsPublicIpAddress}] : [{dnsIp:dnsPublicIpAddress}];
 
         if(clientDnsIpHistory?.length === 0){
-            const res = await fetch('http://localhost:3001/dns-ip-history',{
+            const res = await fetch('http://localhost:3005/dns-ip-history',{
                 method:'POST',
                 headers:{
                        'Content-Type':'application/json',
@@ -159,7 +159,7 @@ class DNSVerify extends Component{
 
     displayMessage(){
         switch(this.state.update){
-            case 0 : return "PLEASE WAIT..."
+            case 0: return "PLEASE WAIT..."
             case 1:  return "SORRY, WE DETECTED SUSPICIOUS BEHAVIOUR, PLEASE TRY AGAIN"
         }
     }
